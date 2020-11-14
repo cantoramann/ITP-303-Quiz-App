@@ -1,0 +1,18 @@
+@import url('https://fonts.googleapis.com/css2?family=Raleway:wght@300&display=swap');
+
+.post-button {
+    box-sizing: border-box;
+    padding: 15px;
+    width: fit-content;
+    height: fit-content;
+    font-family: 'Raleway', sans-serif;
+}
+
+
+#select {
+    color: blue;
+}
+
+.post-error-message {
+    color: red;
+}
