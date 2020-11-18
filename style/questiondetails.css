@@ -1,0 +1,28 @@
+.choices {
+    line-height: 200%;
+    margin-bottom: 20px;
+}
+
+.choices h1 {
+    box-sizing: border-box;
+    padding: 6px;
+}
+
+.choices h1 a:hover {
+    text-decoration: none;
+    cursor: auto;
+}
+
+.correct {
+    color: green;
+}
+
+#spinner {
+    display: none;
+}
+
+#question-text {
+    box-sizing: border-box;
+    padding: 30px;
+    line-height: 220%;
+}

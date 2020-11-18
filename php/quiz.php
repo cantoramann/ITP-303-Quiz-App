@@ -14,7 +14,12 @@ if (!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] == false || !isset($_
 
     //Check validity
     if (isset($_GET["classID"]) && !empty($_GET["classID"])) {
-        $questions = GetClassQuestions($_GET["classID"]);
+        $questions;
+        if ($_GET["classID"] != "-1") {
+            $questions = GetClassQuestions($_GET["classID"]);
+        } else {
+            $questions = GetRandomQuestions();
+        }
         if ($questions->num_rows < 3) {
             $error = "There are not enough questions for a quiz for the selected course. <a href='./post.php'>Wanna post?</a>";
         } else {

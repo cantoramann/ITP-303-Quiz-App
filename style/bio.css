@@ -11,15 +11,11 @@ html, body {
     font-family: 'Raleway', sans-serif;
 }
 
-.uk-card {
-    line-height: 120%;
+.bio-title {
+    font-family: 'Raleway', sans-serif;
+    font-size: 2rem;
 }
 
-.flex {
-    display: flex;
+.error {
+    color: red;
 }
-
-.fit-content {
-    width: fit-content;
-}
-

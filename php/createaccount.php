@@ -7,10 +7,10 @@ if (isset($_SESSION["logged_in"]) && $_SESSION["logged_in"] == true) {
     header('Location: ./home.php');
 }
 
-if (!isset($_POST['email']) || empty($_POST['email'])
-    || !isset($_POST['username']) || empty($_POST['username'])
-    || !isset($_POST["password"]) || empty($_POST['password'])
-    || !isset($_POST["passwordconfirm"]) || empty($_POST["passwordconfirm"])) {
+$error = "";
+if (!isset($_POST['email']) || !isset($_POST['username']) || !isset($_POST["password"]) || !isset($_POST["passwordconfirm"])) {
+} elseif (empty($_POST['email']) || empty($_POST['username']) || empty($_POST["password"]) || empty($_POST["passwordconfirm"])) {
+    $error = "Please fill all required fields";
 } else {
 
     //requires
@@ -20,18 +20,22 @@ if (!isset($_POST['email']) || empty($_POST['email'])
     //hash password
     $passwordhashed = hashPassword($_POST["password"]);
 
-    if (!CheckIfExists($_POST['username'], $passwordhashed)) {
-        if (CreateStudent($_POST['username'], $_POST['email'], $passwordhashed)) {
-            session_start();
-            $_SESSION['loggedin'] = true;
-            $_SESSION['username'] = $_POST["username"];
-            $_SESSION['id'] = GetID($_POST['username']);
-            header("Location: ./home.php");
-        } else {
-            $error = "Something wrong happened!";
-        }
+    if ($_POST["password"] != $_POST["passwordconfirm"]) {
+        $error = "Please fill all required fields";
     } else {
-        $error = "username/email already exist.";
+        if (!CheckIfExists($_POST['username'], $passwordhashed)) {
+            if (CreateStudent($_POST['username'], $_POST['email'], $passwordhashed)) {
+                session_start();
+                $_SESSION['loggedin'] = true;
+                $_SESSION['username'] = $_POST["username"];
+                $_SESSION['id'] = GetID($_POST['username']);
+                header("Location: ./home.php");
+            } else {
+                $error = "Something wrong happened!";
+            }
+        } else {
+            $error = "username/email already exist.";
+        }
     }
 }
 ?>
@@ -63,37 +67,55 @@ if (!isset($_POST['email']) || empty($_POST['email'])
             <div class="uk-margin">
                 <div class="uk-inline">
                     <span class="uk-form-icon" uk-icon="icon: mail"></span>
-                    <input class="uk-input uk-form-width-large" type="text" placeholder="USC email" name="email">
+                    <input class="uk-input uk-form-width-large email-input" type="email" placeholder="USC email" name="email">
                 </div>
             </div>
             <div class="uk-margin">
                 <div class="uk-inline">
                     <span class="uk-form-icon" uk-icon="icon: commenting"></span>
-                    <input class="uk-input uk-form-width-large" type="text" placeholder="username" name="username">
+                    <input class="uk-input uk-form-width-large username-input" type="text" placeholder="username" name="username">
                 </div>
             </div>
             <div class="uk-margin">
                 <div class="uk-inline">
                     <span class="uk-form-icon uk-form-icon-flip" uk-icon="icon: lock"></span>
-                    <input class="password-input uk-input uk-form-width-large" type="password" placeholder="password" name="password">
+                    <input class="password-input uk-input uk-form-width-large password-input" type="password" placeholder="password" name="password">
                 </div>
             </div>
             <div class="uk-margin">
                 <div class="uk-inline">
                     <span class="uk-form-icon uk-form-icon-flip" uk-icon="icon: lock"></span>
-                    <input class="password-match-input uk-input uk-form-width-large" type="password" placeholder="confirm password" name="passwordconfirm">
+                    <input class="password-match-input uk-input uk-form-width-large passwordconfirm-input" type="password" placeholder="confirm password" name="passwordconfirm">
                     </div>
                 </div>
                 <button type="submit" class="login-form-button">Submit</button>
-                <p class="login-error-message"><?php
-                if (isset($error) && !empty($error)) {
-                    echo $error;
-                }
-                ?></p>
+                <p class="login-error-message"><?php echo $error ?></p>
             </div>
         </form>
     </div>
     </div>
+    <script>
+        message = document.querySelector(".login-error-message");
+
+        document.querySelector('form').addEventListener("submit", (e) => {
+            email = document.querySelector(".email-input").value;
+            username = document.querySelector(".username-input").value;
+            password = document.querySelector(".password-input").value;
+            passwordmatch = document.querySelector(".passwordconfirm-input").value;
+            username = username.trim();
+            password = password.trim();
+            console.log(email, username, password, passwordmatch)
+
+            if (email.length == 0 || username.length == 0 || password.length == 0 || passwordmatch.length == 0) {
+                console.log(email, username, password, passwordmatch)
+                e.preventDefault();
+                message.innerHTML = "Please fill all required fields";
+            } else if (password != passwordmatch) {
+                e.preventDefault();
+                message.innerHTML = "Passwords do not match";
+            }
+        })
+    </script>
 
 </body>
 </html>

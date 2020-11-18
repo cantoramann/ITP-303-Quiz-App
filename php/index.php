@@ -85,19 +85,6 @@
                 </div>
             </div>
 
-            <div class="uk-child-width-1-1@m uk-child-width-1-2@l uk-grid-match uk-margin-medium-top" uk-grid>
-                <div>
-                    <div class="uk-card uk-card uk-card-body sample-questions-card-home" style="background-color: rgb(218, 221, 216);">
-                        <h3 class="uk-card-title uk-margin-small-bottom">Example Questions</h3>
-                        <ul class="home-sample-questions-list">
-                            <li><p>Which award has our department chair won?</p></li>
-                            <li><p>Which startup founded in USC sells its products to military and aerospace communities?</p></li>
-                            <li><p>With what clotes did Joe Bebel come to class with the first day of his teaching as a lecturer?</p></li>
-                            <li><p>Do you want to post your own questions? <a href="./credentials.php">Post now!</a></p></li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
         </div>
 
 
@@ -134,19 +121,18 @@
         function(currentValue, currentIndex, listObj) { 
             if (currentIndex == 0) {
                 title = '<?php echo($questions[0]->class_name) ?>';
-                currentValue.children[0].innerHTML= title;
+                currentValue.children[0].innerHTML= "<?php echo($questions[0]->class_name) ?>";
                 currentValue.children[1].innerHTML = "<?php echo($questions[0]->qs) ?>";
 
             }
             if (currentIndex == 1) {
                 title = '<?php echo($questions[0]->class_name) ?>';
-                currentValue.children[0].innerHTML= title;
+                currentValue.children[0].innerHTML= "<?php echo($questions[1]->class_name) ?>";
                 currentValue.children[1].innerHTML = "<?php echo($questions[1]->qs) ?>";
 
             }
             if (currentIndex == 2) {
-                title = '<?php echo($questions[0]->class_name) ?>';
-                currentValue.children[0].innerHTML= title;
+                currentValue.children[0].innerHTML= "<?php echo($questions[2]->class_name) ?>";
                 currentValue.children[1].innerHTML= "<?php echo($questions[2]->qs) ?>";
 
             }

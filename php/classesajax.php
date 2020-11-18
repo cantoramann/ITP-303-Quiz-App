@@ -21,6 +21,7 @@ if ($result == null) {
     echo '<table class="uk-table uk-table-small uk-table-divider">';
     echo '<thead>';
     echo '<tr>';
+    echo '<th>ID</th>';
     echo '<th>Class</th>';
     echo '<th>Question</th>';
     echo '</tr>';
@@ -30,8 +31,10 @@ if ($result == null) {
         echo '<tr>';
         $qs = $row[0];
         $class_name = $row[6];
+        $question_id = $row[7];
+        echo '<td>' . $question_id . '</td>';
         echo '<td>' . $class_name . '</td>';
-        echo '<td>' . $qs . '</td>';
+        echo '<td><a href="questiondetails.php?details_direct_transfer=true&questiondetailsid=' . $question_id . '">'. $qs . '</a></td>';
         echo '</tr>';
     }
     

@@ -7,6 +7,7 @@ if (!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] == false || !isset($_
 require './util/db.php';
     $questionsPosted = QuestionNumberPosted($_SESSION['id']);
     $uniqueClassesPosted = SelectDistinctClassesByUser($_SESSION['id']);
+    $description = GetDescription($_SESSION["id"]);
 ?>
 
 <!DOCTYPE html>
@@ -39,13 +40,14 @@ require './util/db.php';
         <li>
             <a class="uk-accordion-title" href="#">Classes</a>
             <div class="uk-accordion-content">
-                <p>You have posted questions about <a><?php echo $uniqueClassesPosted ?></a> different classes!</p>
+                <p>You have posted questions about <?php echo $uniqueClassesPosted ?> different classes!</p>
             </div>
         </li>
         <li>
-            <a class="uk-accordion-title" href="#">Keep going!</a>
+            <a class="uk-accordion-title" href="#">Your Bio!</a>
             <div class="uk-accordion-content">
-                <p>You are a huge asset to this community! Keep this in mind!</p>
+                <p><?php echo $description; ?></p>
+                <a href="bio.php">Update your bio!</a>
             </div>
         </li>
         </ul>

@@ -167,7 +167,7 @@ function GetAllStudentQuestions($user_id)
         echo $mysqli->connect_error;
         exit();
     }
-    $query = "SELECT question, a, b, c, d, answer, Classes.class_name AS name
+    $query = "SELECT question, a, b, c, d, answer, Classes.class_name AS name, Questions.id
     FROM Questions
     JOIN Classes
         ON Questions.Classes_id = Classes.id
@@ -231,13 +231,13 @@ function GetRandomQuestions()
     $result = $mysqli->query($query);
     if (!$result) {
         echo $mysqli->error;
-        return null;
+        return $mysqli->error;
         exit();
     } else {
         if ($result->num_rows > 0) {
             return ($result);
         } else {
-            return null;
+            return 5;
         }
     }
     $mysqli->close();
@@ -250,7 +250,7 @@ function GetQuestionsFromUserGivenClass($class_id, $user_id)
         echo $mysqli->connect_error;
         exit();
     }
-    $query = "SELECT question, a, b, c, d, answer, Classes.class_name AS name
+    $query = "SELECT question, a, b, c, d, answer, Classes.class_name AS name, Questions.id
     FROM Questions
     JOIN Classes
         ON Questions.Classes_id = Classes.id
@@ -296,4 +296,140 @@ function SelectDistinctClassesByUser($user_id)
             return -1;
         }
     }
+    $mysqli->close();
+}
+
+function GetClassName($class_id)
+{
+    $mysqli = new mysqli(DB_HOST, DB_USER, DB_PASS, DB_NAME);
+    if ($mysqli->connect_errno) {
+        echo $mysqli->connect_error;
+        exit();
+        return -1;
+    }
+    $query = "SELECT class_name
+    FROM Classes
+    WHERE id = " . $class_id . ";";
+
+    $result = $mysqli->query($query);
+    if (!$result) {
+        echo $mysqli->error;
+        return null;
+        exit();
+    } else {
+        if ($result->num_rows > 0) {
+            $row = mysqli_fetch_row($result);
+            return ($row[0]);
+        } else {
+            return null;
+        }
+    }
+    $mysqli->close();
+}
+
+function GetQuestion($question_id)
+{
+    $mysqli = new mysqli(DB_HOST, DB_USER, DB_PASS, DB_NAME);
+    if ($mysqli->connect_errno) {
+        echo $mysqli->connect_error;
+        exit();
+        return -1;
+    }
+    $query = "SELECT *, Classes.class_name
+    FROM Questions
+    JOIN Classes
+        ON Questions.Classes_id = Classes.id
+    WHERE Questions.id = " . $question_id . ";";
+
+    $result = $mysqli->query($query);
+    if (!$result) {
+        echo $mysqli->error;
+        return null;
+        exit();
+    } else {
+        if ($result->num_rows > 0) {
+            $row = mysqli_fetch_row($result);
+            return ($row);
+        } else {
+            return null;
+        }
+    }
+    $mysqli->close();
+}
+
+function DeleteQuestion($question_id)
+{
+    $mysqli = new mysqli(DB_HOST, DB_USER, DB_PASS, DB_NAME);
+    if ($mysqli->connect_errno) {
+        echo $mysqli->connect_error;
+        exit();
+        return false;
+    }
+
+    $new_question_text = trim($new_question_text);
+    $query ="DELETE FROM Questions
+        WHERE Questions.id = " . $question_id . ";";
+
+    $result = $mysqli->query($query);
+    if (!$result) {
+        return false;
+        exit();
+    } else {
+        if ($result->num_rows > 0) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+    $mysqli->close();
+}
+
+function GetDescription($student_id)
+{
+    $mysqli = new mysqli(DB_HOST, DB_USER, DB_PASS, DB_NAME);
+    if ($mysqli->connect_errno) {
+        echo $mysqli->connect_error;
+        exit();
+        return false;
+    }
+    $query ="SELECT user_description FROM Students
+    WHERE id = " . $student_id . ";";
+    $result = $mysqli->query($query);
+    if (!$result) {
+        return false;
+        exit();
+    } else {
+        if ($result->num_rows > 0) {
+            $row = mysqli_fetch_row($result);
+            return ($row[0]);
+        } else {
+            return -1;
+        }
+    }
+}
+
+function UpdatePassword($student_id, $pass)
+{
+    $mysqli = new mysqli(DB_HOST, DB_USER, DB_PASS, DB_NAME);
+    if ($mysqli->connect_errno) {
+        echo $mysqli->connect_error;
+        exit();
+        return false;
+    }
+
+    $pass_hashed = hash("sha256", $pass);
+    
+    $query ="UPDATE Students
+    SET password = '" . $pass_hashed . "'
+    WHERE id = " . $student_id . ";";
+    
+    $result = $mysqli->query($query);
+
+    if (!$result) {
+        return false;
+        exit();
+    } else {
+        return true;
+    }
+    $mysqli->close();
 }

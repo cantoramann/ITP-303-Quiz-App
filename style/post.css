@@ -16,3 +16,7 @@
 .post-error-message {
     color: red;
 }
+
+#post-button:hover {
+    cursor: pointer;
+}

@@ -6,9 +6,10 @@ if (isset($_SESSION["username"]) && !empty($_SESSION["username"])) {
 
 // Server-side input validation
 $error = "";
-if (!isset($_POST['username']) || empty($_POST['username'])
-    || !isset($_POST['password']) || empty($_POST['password'])) {
-    $error = "Please fill out all required fields.";
+if (!isset($_POST['username']) || !isset($_POST['password'])) {
+    $error = "";
+} elseif (empty($_POST['username']) || empty($_POST['password'])) {
+    $error = "Please fill all required fields";
 } else {
 
     // connect to db
@@ -77,35 +78,25 @@ if (!isset($_POST['username']) || empty($_POST['username'])
         </form>
     </div>
     </div>
-    <!-- <script>
+    <script>
 
-        document.querySelector('form').onsubmit = function() {
-            button = document.querySelector(".login-form-button");
-            button.addEventListener("click", (event) => {
-            event.preventDefault();
+        message = document.querySelector(".login-error-message");
 
+        document.querySelector('form').addEventListener("submit", (e) => {
             username = document.querySelector(".username-input").value;
             password = document.querySelector(".password-input").value;
-            message = document.querySelector(".login-error-message");
             username = username.trim();
             password = password.trim();
 
-            //check spaces
-            if (username.length == 0) {
-                console.log("password is empty");
-                message.innerHTML = "Username is empty";
-                message.style.visibility = "visible";
-                message.style.color = "red";
-            } else if (password.length == 0) {
-                message.innerHTML = "Password is empty";
-                message.style.visibility = "visible";
-                message.style.color = "red";
-            } else {
-                message.style.visibility = "hidden";
-                window.location.href = window.location.href;
+            if (username.length == 0 || password.length == 0) {
+                console.log("username", username);
+                console.log("password", password);
+                e.preventDefault();
+                message.innerHTML = "Please fill all required fields";
             }
+        })
 
-    </script> -->
+    </script>
 </body>
 </html>
 

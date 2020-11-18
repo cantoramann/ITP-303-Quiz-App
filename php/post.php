@@ -13,20 +13,22 @@ if (!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] == false || !isset($_
     $error = "";
 
     //Check validity
-    if (isset($_POST["question"]) && !empty($_POST["question"]) && isset($_POST["a"]) && !empty($_POST["a"]) &&
-    isset($_POST["b"]) && !empty($_POST["b"]) && isset($_POST["c"]) && !empty($_POST["c"])
-    && isset($_POST["d"]) && !empty($_POST["d"]) && isset($_POST["correct"]) && !empty($_POST["correct"]) && isset($_POST["classID"]) && !empty($_POST["classID"])) {
-        $student_id = $_SESSION["id"];
-        $success = CreateQuestion($_POST["question"], $_POST["a"], $_POST["b"], $_POST["c"], $_POST["d"], $_POST["correct"], $student_id, $_POST["classID"]);
-        if ($success) {
-            $alertMessage = 1;
-        } else {
-            $alertMessage = -1;
-        }
+    if (!isset($_POST["question"]) || !isset($_POST["a"]) || !isset($_POST["b"]) || !isset($_POST["c"]) || !isset($_POST["d"]) || !isset($_POST["classID"])) {
+        $error = "";
     } else {
-        $error = "Please fill all fields";
+        if (empty($_POST["question"]) || empty($_POST["a"]) || empty($_POST["b"]) || empty($_POST["c"]) || empty($_POST["d"]) || empty($_POST["correct"]) || empty($_POST["classID"])) {
+            $error = "Please fill all fields";
+        } else {
+            $student_id = $_SESSION["id"];
+            $success = CreateQuestion($_POST["question"], $_POST["a"], $_POST["b"], $_POST["c"], $_POST["d"], $_POST["correct"], $student_id, $_POST["classID"]);
+            if ($success) {
+                $alertMessage = 1;
+            } else {
+                $alertMessage = -1;
+            }
+        }
     }
-
+    
 ?>
 
 
@@ -93,21 +95,21 @@ if (!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] == false || !isset($_
 
         <p class="uk-margin-medium-top">Question</p>
         <div class="uk-margin">
-            <textarea class="uk-textarea" rows="5" placeholder="Question" name="question"></textarea>
+            <textarea class="uk-textarea question" rows="5" placeholder="Question" name="question"></textarea>
         </div>
 
         <p class="uk-margin-medium-top">Answer Choices</p>
         <div class="uk-margin">
-            <textarea class="uk-textarea" rows="5" placeholder="Answer A" name="a"></textarea>
+            <textarea class="uk-textarea a" rows="5" placeholder="Answer A" name="a"></textarea>
         </div>
         <div class="uk-margin">
-            <textarea class="uk-textarea" rows="5" placeholder="Answer B" name="b"></textarea>
+            <textarea class="uk-textarea b" rows="5" placeholder="Answer B" name="b"></textarea>
         </div>
         <div class="uk-margin">
-            <textarea class="uk-textarea" rows="5" placeholder="Answer C" name="c"></textarea>
+            <textarea class="uk-textarea c" rows="5" placeholder="Answer C" name="c"></textarea>
         </div>
         <div class="uk-margin">
-            <textarea class="uk-textarea" rows="5" placeholder="Answer D" name="d"></textarea>
+            <textarea class="uk-textarea d" rows="5" placeholder="Answer D" name="d"></textarea>
         </div>
 
         <p class="uk-margin-medium-top">Correct Answer</p>
@@ -118,11 +120,36 @@ if (!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] == false || !isset($_
             <label><input class="uk-radio" type="radio" name="correct" value="d"> D</label>
         </div>
 
-        <input type="submit" class="post-button uk-margin-medium-bottom">
+        <input type="submit" class="post-button uk-margin-medium-bottom" id="post-button">
 
     </fieldset>
     </form>
     </div>
+
+    <script>
+        document.querySelector("form").addEventListener("submit", (e) => {
+            question = document.querySelector(".question").value;
+            a = document.querySelector(".a").value
+            b = document.querySelector(".b").value
+            c = document.querySelector(".c").value
+            d = document.querySelector(".d").value
+
+            var correct = null;
+            var radios = document.getElementsByName('correct');     
+            for(i = 0; i < radios.length; i++) { 
+                if(radios[i].checked) {
+                    correct = radios[i];
+                }
+            }
+            if (correct == null || question.length == 0 || a.length == 0 || b.length == 0 || c.length == 0 || d.length == 0) {
+                e.preventDefault();
+                document.querySelector(".post-error-message").innerHTML = "Please fill all fields";
+                console.log(correct, question, a, b, c, d);
+            }
+            
+        })
+
+    </script>
 
 </body>
 </html>
